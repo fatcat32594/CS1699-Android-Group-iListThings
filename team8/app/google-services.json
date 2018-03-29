@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1041063044999",
+    "firebase_url": "https://team8-ada58.firebaseio.com",
+    "project_id": "team8-ada58",
+    "storage_bucket": "team8-ada58.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041063044999:android:e06b048f06605c38",
+        "android_client_info": {
+          "package_name": "edu.pitt.cs1699.team8"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1041063044999-6248l125t4bvuq8rap7e0u0ij06cjehm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.pitt.cs1699.team8",
+            "certificate_hash": "df033d6ca147a52abbc5e69c13326fd0d11ae846"
+          }
+        },
+        {
+          "client_id": "1041063044999-n67jk201getgq4sort9adv8t1kqd4ske.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxwYTGDz8L4AZ8Kd_jvr6J2PjxrliCjPM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1041063044999-n67jk201getgq4sort9adv8t1kqd4ske.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
