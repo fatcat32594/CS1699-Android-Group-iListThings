@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">testApp8</string>
+    <string name="bcast">Broadcast</string>
+    <string name="ipc">IPC</string>
+    <string name="mIntent">Multiple Intent</string>
+    <string name="sIntent">Single Intent</string>
 </resources>
