@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Button loginButton;
     Button registerButton;
     Button logoutButton;
-    Button viewDefButton;
-    Button addDefButton;
+
 
     TextView accountName;
 
@@ -62,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.buttonLogIn);
         logoutButton = findViewById(R.id.buttonLogOut);
         registerButton = findViewById(R.id.buttonCreateAccount);
-        viewDefButton = findViewById(R.id.buttonViewDef);
-        addDefButton = findViewById(R.id.buttonAddDef);
+
 
         accountName = findViewById(R.id.textViewLoginStatus);
 
