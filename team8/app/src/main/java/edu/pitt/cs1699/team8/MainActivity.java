@@ -17,9 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
 //import com.google.firebase.auth.FirebaseAuth;
-=======
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,7 +27,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
->>>>>>> master
 
 public class MainActivity extends AppCompatActivity {
 
@@ -114,10 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-<<<<<<< HEAD
-    
-}
-=======
+
     //create an account if one doesn't exist
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -195,4 +189,3 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
->>>>>>> master
