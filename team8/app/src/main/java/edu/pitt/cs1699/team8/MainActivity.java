@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.buttonLogIn);
         logoutButton = findViewById(R.id.buttonLogOut);
         registerButton = findViewById(R.id.buttonCreateAccount);
-        viewDefButton = findViewById(R.id.buttonViewDef);
-        addDefButton = findViewById(R.id.buttonAddDef);
 
         accountName = findViewById(R.id.textViewLoginStatus);
 
@@ -89,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         registerButton.setEnabled(!loggedIn);
         logoutButton.setEnabled(loggedIn);
 
+        userText.setText("");
+        passText.setText("");
+
         if (loggedIn) {
             //set the display text to show username
             accountName.setText(currentUser.getEmail());
@@ -98,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
             accountName.setText("Not Logged In");
 
         }
+
+
     }
 
     //don't try to login with empty passwords or usernames - this checks for those
@@ -164,24 +167,37 @@ public class MainActivity extends AppCompatActivity {
     public void loginClick(View v) {
         if (validate(userText.getText().toString(), passText.getText().toString())) {
             signIn(userText.getText().toString(), passText.getText().toString());
-            userText.setText("");
-            passText.setText("");
         }
+        startListIntent();
+
     }
 
     //create account button
     public void createAccountClick(View v) {
         if (validate(userText.getText().toString(), passText.getText().toString())) {
             createAccount(userText.getText().toString(), passText.getText().toString());
-            userText.setText("");
-            passText.setText("");
         }
+        startListIntent();
+
     }
 
     //log out button
     public void logoutClick(View v) {
         mAuth.signOut();
         updateUI(null);
+
+    }
+
+    private void startListIntent() {
+        if (mAuth.getCurrentUser() != null) {
+            Intent startList = new Intent(this, List.class);
+
+            Bundle b = getIntent().getExtras();
+            startList.putExtras(b);
+            startList.putExtra("request", getIntent().getAction());
+
+            startActivity(startList);
+        }
 
     }
 
