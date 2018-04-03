@@ -27,16 +27,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent("edu.pitt.cs1699.team8.SINGLE");
         Bundle b = new Bundle();
         JSONObject singleItemData = new JSONObject();
-        JSONObject type = new JSONObject();
-        JSONObject data = new JSONObject();
+
 
         try{
-            type.put("type", "Items");
-            data.put("Name", "Apple");
-            data.put("Price", "100");
-            data.put("Quantity", "4");
-            singleItemData.put("type", type);
-            singleItemData.put("data", data);
+
+            singleItemData.put("Name", "Apple");
+            singleItemData.put("Price", "100");
+            singleItemData.put("Quantity", "4");
         }catch(JSONException e){
             e.printStackTrace();
         }

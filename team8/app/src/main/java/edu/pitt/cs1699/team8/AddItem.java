@@ -3,6 +3,7 @@ package edu.pitt.cs1699.team8;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -39,6 +40,7 @@ public class AddItem extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         Intent receivedIntent = getIntent();
+
         Bundle receivedBundle = receivedIntent.getBundleExtra("singleItemData");
         String singleItem;
         if(receivedBundle != null){
@@ -50,13 +52,14 @@ public class AddItem extends AppCompatActivity {
         try{
             JSONObject singleItemData = new JSONObject(singleItem);
             itemName = (String) singleItemData.get("Name");
-            itemQuantity = (long) singleItemData.get("Quantity");
-            double itemPrice = (double) singleItemData.get("Price");
+            itemQuantity = Long.parseLong(singleItemData.get("Quantity").toString());
+            double itemPrice = Double.parseDouble(singleItemData.get("Price").toString());
             itemText.setText(itemName);
             priceText.setText(Double.toString(itemPrice));
             quantityText.setText(Long.toString(itemQuantity));
         }catch(Exception e){
-
+            Log.v("STUFF",e.toString());
+            Log.v("STUFF",singleItem);
         }
     }
 
