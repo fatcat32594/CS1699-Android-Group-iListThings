@@ -60,7 +60,7 @@ public class BackendManager {
         Item i = new Item(name, price, quantity);
         items.put(name, i);
 
-        double newPrice = oldPrice + price;
+        double newPrice = price;
         double newQuantity = oldQuantity + quantity;
 
         DatabaseReference myRef = database.getReference("testing/"+name);
