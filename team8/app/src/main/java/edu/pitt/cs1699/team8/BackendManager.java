@@ -29,9 +29,13 @@ public class BackendManager {
                     items = new HashMap<>();
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
 
-                        String name = child.getKey();
-                        double price = Double.parseDouble(child.child("price").getValue().toString());
-                        long quantity = (long) child.child("quantity").getValue();
+                        try {
+                            String name = child.getKey();
+                            double price = Double.parseDouble(child.child("price").getValue().toString());
+                            long quantity = (long) child.child("quantity").getValue();
+                        } catch (NullPointerException e) {
+                            Log.e("SOEMTHING", String.valueOf(child.child("quantity").exists()));
+                        }
 
                         Item i = new Item(name, price, quantity);
                         items.put(name, i);
