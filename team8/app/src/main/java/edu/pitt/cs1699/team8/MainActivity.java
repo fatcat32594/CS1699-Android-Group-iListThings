@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
-        mAuth.signOut();
 
         startList = new Intent(this, List.class);
 
@@ -77,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         //now see if we're logged in, and update the UI to match
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        mAuth.signOut();
         updateUI(currentUser);
 
     }
