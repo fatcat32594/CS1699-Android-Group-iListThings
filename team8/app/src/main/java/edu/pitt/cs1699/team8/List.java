@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import static android.R.layout.simple_list_item_1;
 
@@ -28,6 +29,9 @@ public class List extends AppCompatActivity {
     ListView list;
     BackendManager backendManager;
 
+
+    private FirebaseDatabase database = null;
+    private HashMap<String, Item> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,26 +46,40 @@ public class List extends AppCompatActivity {
 
 
         list = findViewById(R.id.listView);
-        renderList();
-        new Thread(new Runnable() {
+
+
+
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        items = new HashMap<>();
+        final DatabaseReference myRef = database.getReference(mAuth.getUid());
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void run() {
-                boolean ready=false;
-                while (!ready) {
-                    ready = backendManager.getReady();
-                    renderList();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                items = new HashMap<>();
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
                     try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        String name = child.getKey();
+                        double price = Double.parseDouble(child.child("price").getValue().toString());
+                        long quantity = (long) child.child("quantity").getValue();
+
+                        Item i = new Item(name, price, quantity);
+                        items.put(name, i);
+                    }
+                    catch (NullPointerException e) {
+                        Log.e("SOEMTHING", String.valueOf(child.child("quantity").exists()));
                     }
                 }
+                renderList();
             }
-        }).run();
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-
+            }
+        });
     }
+
 
     private void renderList() {
         ArrayList<String> groceriesList = backendManager.getItemsAsStringArray();
