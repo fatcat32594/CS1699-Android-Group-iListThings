@@ -80,13 +80,7 @@ public class List extends AppCompatActivity {
 
             }
         });
-    }
 
-
-    Intent startSingle;
-
-    protected void onStart() {
-        super.onStart();
         Intent receivedIntent = getIntent();
         Bundle receivedBundle = receivedIntent.getExtras();
         String action;
@@ -102,6 +96,14 @@ public class List extends AppCompatActivity {
                 startSingle.putExtras(receivedBundle);
             startActivity(startSingle);
         }
+    }
+
+
+    Intent startSingle;
+
+    protected void onStart() {
+        super.onStart();
+
     }
 
 
