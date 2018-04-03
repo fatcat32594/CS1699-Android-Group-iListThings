@@ -33,12 +33,13 @@ public class BackendManager {
                             String name = child.getKey();
                             double price = Double.parseDouble(child.child("price").getValue().toString());
                             long quantity = (long) child.child("quantity").getValue();
+                            Item i = new Item(name, price, quantity);
+                            items.put(name, i);
                         } catch (NullPointerException e) {
                             Log.e("SOEMTHING", String.valueOf(child.child("quantity").exists()));
                         }
 
-                        Item i = new Item(name, price, quantity);
-                        items.put(name, i);
+
                     }
                 }
 
