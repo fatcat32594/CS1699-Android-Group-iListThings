@@ -46,6 +46,7 @@ public class List extends AppCompatActivity {
 
 
         list = findViewById(R.id.listView);
+
         
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -76,6 +77,28 @@ public class List extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    Intent startSingle;
+
+    protected void onStart() {
+        super.onStart();
+        Intent receivedIntent = getIntent();
+        Bundle receivedBundle = receivedIntent.getExtras();
+        String action;
+        if (receivedBundle != null) {
+            action = receivedBundle.getString("request");
+        } else {
+            action = "";
+        }
+
+        if(action.equals("edu.pitt.cs1699.team8.SINGLE")){
+            startSingle=new Intent(this, AddItem.class);
+            if (receivedBundle != null && !receivedBundle.isEmpty())
+                startSingle.putExtras(receivedBundle);
+            startActivity(startSingle);
+        }
     }
 
 
