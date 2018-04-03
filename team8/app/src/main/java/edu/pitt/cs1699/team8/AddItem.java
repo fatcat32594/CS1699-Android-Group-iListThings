@@ -39,7 +39,7 @@ public class AddItem extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         Intent receivedIntent = getIntent();
-        Bundle receivedBundle = receivedIntent.getExtras();
+        Bundle receivedBundle = receivedIntent.getBundleExtra("singleItemData");
         String singleItem;
         if(receivedBundle != null){
             singleItem = receivedBundle.getString("singleItemData");
