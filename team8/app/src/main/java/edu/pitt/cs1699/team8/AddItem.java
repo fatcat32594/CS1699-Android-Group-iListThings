@@ -30,6 +30,9 @@ public class AddItem extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
         mAuth = FirebaseAuth.getInstance();
         backendManager = new BackendManager();
+        itemText = findViewById(R.id.item_input);
+        priceText = findViewById(R.id.price_input);
+        quantityText = findViewById(R.id.quantity_input);
     }
 
     @Override
