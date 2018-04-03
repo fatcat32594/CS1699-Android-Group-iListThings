@@ -1,5 +1,6 @@
 package edu.pitt.cs1699.team8;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,7 +49,8 @@ public class List extends AppCompatActivity {
     }
 
     protected void singleClick(View view){
-
+        Intent intent = new Intent(this,AddItem.class);
+        startActivity(intent);
     }
 
     protected void multiClick(View view){
