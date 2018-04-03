@@ -2,6 +2,7 @@ package edu.pitt.cs1699.team8;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,28 +15,35 @@ import java.util.HashMap;
 public class BackendManager {
     private FirebaseDatabase database = null;
     private HashMap<String, Item> items;
-    private String uid;
+    private FirebaseAuth mAuth;
 
-
-    public BackendManager(String uid) {
+    public BackendManager() {
         if (database == null) {
-            this.uid = uid;
+            mAuth = FirebaseAuth.getInstance();
             database = FirebaseDatabase.getInstance();
             items = new HashMap<>();
-            final DatabaseReference myRef = database.getReference(uid);
+            final DatabaseReference myRef = database.getReference(mAuth.getUid());
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     items = new HashMap<>();
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
 
-                        String name = child.getKey();
-                        double price = Double.parseDouble(child.child("price").getValue().toString());
-                        long quantity = (long) child.child("quantity").getValue();
+                        try {
+                            String name = child.getKey();
+                            double price = Double.parseDouble(child.child("price").getValue().toString());
+                            long quantity = (long) child.child("quantity").getValue();
 
-                        Item i = new Item(name, price, quantity);
-                        items.put(name, i);
+                            Item i = new Item(name, price, quantity);
+                            items.put(name, i);
+
+                        } catch (NullPointerException e) {
+                            Log.e("SOEMTHING", String.valueOf(child.child("quantity").exists()));
+                        }
+
+
                     }
+                    ready=true;
                 }
 
                 @Override
@@ -46,7 +54,7 @@ public class BackendManager {
         }
     }
 
-    public void addItem(String uid, String name, final double price, final long quantity) {
+    public void addItem(String name, final double price, final long quantity) {
         double oldPrice;
         long oldQuantity;
         if (items.containsKey(name)) {
@@ -60,12 +68,18 @@ public class BackendManager {
         Item i = new Item(name, price, quantity);
         items.put(name, i);
 
-        double newPrice = oldPrice + price;
+        double newPrice = price;
         double newQuantity = oldQuantity + quantity;
 
-        DatabaseReference myRef = database.getReference("testing/"+name);
+        DatabaseReference myRef = database.getReference(mAuth.getUid()+"/"+name);
         myRef.child("price").setValue(newPrice);
         myRef.child("quantity").setValue(newQuantity);
+    }
+
+    boolean ready=false;
+
+    public boolean getReady(){
+        return ready;
     }
 
     public ArrayList<String> getItemsAsStringArray() {

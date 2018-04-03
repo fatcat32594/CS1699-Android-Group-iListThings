@@ -1,5 +1,6 @@
 package edu.pitt.cs1699.team8;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,11 +18,20 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+
+import static android.R.layout.simple_list_item_1;
 
 public class List extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    ListView list;
+    BackendManager backendManager;
+
+
+    private FirebaseDatabase database = null;
+    private HashMap<String, Item> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,23 +42,60 @@ public class List extends AppCompatActivity {
         String user = mAuth.getCurrentUser().getUid();
 
 
-        BackendManager backendManager = new BackendManager(user);
+        backendManager = new BackendManager();
+
+
+        list = findViewById(R.id.listView);
 
 
 
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        items = new HashMap<>();
+        final DatabaseReference myRef = database.getReference(mAuth.getUid());
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                items = new HashMap<>();
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    try {
+                        String name = child.getKey();
+                        double price = Double.parseDouble(child.child("price").getValue().toString());
+                        long quantity = (long) child.child("quantity").getValue();
+
+                        Item i = new Item(name, price, quantity);
+                        items.put(name, i);
+                    }
+                    catch (NullPointerException e) {
+                        Log.e("SOEMTHING", String.valueOf(child.child("quantity").exists()));
+                    }
+                }
+                renderList();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    private void renderList() {
         ArrayList<String> groceriesList = backendManager.getItemsAsStringArray();
-
-
-        ListView list = findViewById(R.id.listView);
         if(groceriesList!=null) {
-            list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, groceriesList));
+            list.setAdapter(new ArrayAdapter<String>(this, simple_list_item_1, groceriesList));
+            try {
+                Log.e("LIST", groceriesList.get(0));
+            } catch (IndexOutOfBoundsException e) {
+                Log.e("LIST", "IS EMPTY");
+            }
         }
-
-
     }
 
     protected void singleClick(View view){
-
+        Intent intent = new Intent(this,AddItem.class);
+        startActivity(intent);
     }
 
     protected void multiClick(View view){

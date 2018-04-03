@@ -29,10 +29,7 @@ public class AddItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
         mAuth = FirebaseAuth.getInstance();
-        backendManager = new BackendManager(mAuth.getCurrentUser().getUid());
-        itemText = findViewById(R.id.item_input);
-        priceText = findViewById(R.id.price_input);
-        quantityText = findViewById(R.id.quantity_input);
+        backendManager = new BackendManager();
     }
 
     @Override
@@ -66,7 +63,7 @@ public class AddItem extends AppCompatActivity {
         itemQuantity = Long.parseLong(quantityText.getText().toString());
         final double itemPrice = Double.parseDouble(priceText.getText().toString());
 
-        backendManager.addItem(mAuth.getCurrentUser().getUid(), itemName, itemPrice, itemQuantity);
+        backendManager.addItem(itemName, itemPrice, itemQuantity);
 
         try {
             Intent intent = new Intent("edu.pitt.cs1699.team9.NEW_STOCK");
@@ -74,8 +71,8 @@ public class AddItem extends AppCompatActivity {
             intent.putExtra("price", itemPrice);
             startActivity(intent);
         }catch(Exception e){
-
         }
+
         finish();
     }
 }
