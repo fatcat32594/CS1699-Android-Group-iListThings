@@ -46,9 +46,7 @@ public class List extends AppCompatActivity {
 
 
         list = findViewById(R.id.listView);
-
-
-
+        
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         items = new HashMap<>();
