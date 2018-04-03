@@ -19,9 +19,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static android.R.layout.simple_list_item_1;
+
 public class List extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+
+    ListView list;
+    BackendManager backendManager;
 
 
     @Override
@@ -33,19 +38,41 @@ public class List extends AppCompatActivity {
         String user = mAuth.getCurrentUser().getUid();
 
 
-        BackendManager backendManager = new BackendManager(user);
+        backendManager = new BackendManager();
+
+
+        list = findViewById(R.id.listView);
+        renderList();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean ready=false;
+                while (!ready) {
+                    ready = backendManager.getReady();
+                    renderList();
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).run();
 
 
 
+    }
+
+    private void renderList() {
         ArrayList<String> groceriesList = backendManager.getItemsAsStringArray();
-
-
-        ListView list = findViewById(R.id.listView);
         if(groceriesList!=null) {
-            list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, groceriesList));
+            list.setAdapter(new ArrayAdapter<String>(this, simple_list_item_1, groceriesList));
+            try {
+                Log.e("LIST", groceriesList.get(0));
+            } catch (IndexOutOfBoundsException e) {
+                Log.e("LIST", "IS EMPTY");
+            }
         }
-
-
     }
 
     protected void singleClick(View view){
