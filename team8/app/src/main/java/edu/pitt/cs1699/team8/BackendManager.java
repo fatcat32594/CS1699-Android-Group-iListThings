@@ -72,11 +72,18 @@ public class BackendManager {
         myRef.child("quantity").setValue(newQuantity);
     }
 
+    boolean ready=false;
+
+    public boolean getReady(){
+        return ready;
+    }
+
     public ArrayList<String> getItemsAsStringArray() {
         ArrayList<String> strings = new ArrayList<>();
         for (Item i: items.values()) {
             strings.add(i.toString());
         }
+        ready=true;
         return strings;
 
     }

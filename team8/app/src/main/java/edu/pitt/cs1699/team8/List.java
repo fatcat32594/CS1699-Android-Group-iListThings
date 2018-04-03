@@ -46,7 +46,9 @@ public class List extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {
+                boolean ready=false;
+                while (!ready) {
+                    ready = backendManager.getReady();
                     renderList();
                     try {
                         Thread.sleep(3000);
