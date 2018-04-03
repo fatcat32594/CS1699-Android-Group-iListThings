@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -41,13 +42,24 @@ public class MainActivity extends AppCompatActivity {
 
     TextView accountName;
 
+    Intent startList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
+
+        startList = new Intent(this, List.class);
+
+        Bundle b = getIntent().getExtras();
+        if (b != null && !b.isEmpty())
+            startList.putExtras(b);
+        startList.putExtra("request", getIntent().getAction());
 
     }
 
@@ -111,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     //create an account if one doesn't exist
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -124,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Account Created.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(user);
+                            startListIntent();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("LoginNotice", "createUserWithEmail:failure", task.getException());
@@ -146,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("LoginNotice", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+                            startListIntent();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("LoginNotice", "signInWithEmail:failure", task.getException());
@@ -166,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
         if (validate(userText.getText().toString(), passText.getText().toString())) {
             signIn(userText.getText().toString(), passText.getText().toString());
         }
-        startListIntent();
 
     }
 
@@ -175,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         if (validate(userText.getText().toString(), passText.getText().toString())) {
             createAccount(userText.getText().toString(), passText.getText().toString());
         }
-        startListIntent();
+
 
     }
 
@@ -188,12 +202,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void startListIntent() {
         if (mAuth.getCurrentUser() != null) {
-            Intent startList = new Intent(this, List.class);
-
-            Bundle b = getIntent().getExtras();
-            startList.putExtras(b);
-            startList.putExtra("request", getIntent().getAction());
-
             startActivity(startList);
         }
 

@@ -28,9 +28,11 @@ public class BackendManager {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     items = new HashMap<>();
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
+
                         String name = child.getKey();
                         double price = Double.parseDouble(child.child("price").getValue().toString());
                         long quantity = (long) child.child("quantity").getValue();
+
                         Item i = new Item(name, price, quantity);
                         items.put(name, i);
                     }
