@@ -3,6 +3,7 @@ package edu.pitt.cs1699.team8;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +29,7 @@ public class AddItem extends AppCompatActivity {
         backendManager = new BackendManager(mAuth.getCurrentUser().getUid());
     }
 
-    public void addClick(){
+    public void addClick(View view){
         itemText = findViewById(R.id.item_input);
         priceText = findViewById(R.id.price_input);
         quantityText = findViewById(R.id.quantity_input);
@@ -45,7 +46,8 @@ public class AddItem extends AppCompatActivity {
             intent.putExtra("price", itemPrice);
             startActivity(intent);
         }catch(Exception e){
-
         }
+
+        finish();
     }
 }
