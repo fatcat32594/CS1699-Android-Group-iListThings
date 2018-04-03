@@ -77,6 +77,7 @@ public class AddItem extends AppCompatActivity {
             intent.putExtra("price", itemPrice);
             startActivity(intent);
         }catch(Exception e){
+            Log.v("SEND",e.toString());
         }
 
         finish();
