@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         Bundle b = new Bundle();
         JSONObject singleItemData = new JSONObject();
 
-
         try{
 
             singleItemData.put("Name", "Apple");
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public void onMultipleIntentClick(View v){
         Intent intent = new Intent("edu.pitt.cs1699.team8.SINGLE");
         Bundle b = new Bundle();
-        JSONObject multipleItemData = new JSONObject();
+        JSONArray multipleItemData = new JSONArray();
         JSONObject type = new JSONObject();
         JSONObject item1 = new JSONObject();
         JSONObject item2 = new JSONObject();
@@ -61,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
             item3.put("Name","Tomato");
             item3.put("Price","250");
             item3.put("Quantity","1");
-            multipleItemData.put("type", type);
-            multipleItemData.put("item1", item1);
-            multipleItemData.put("item2", item2);
-            multipleItemData.put("item3", item3);
+            multipleItemData.put(type);
+            multipleItemData.put(item1);
+            multipleItemData.put(item2);
+            multipleItemData.put(item3);
         }catch(JSONException e){
             e.printStackTrace();
         }
