@@ -12,18 +12,18 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/Single Intent"
+            android:id="@+id/Single_Intent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onSingleIntentClick"
             android:text="@string/sIntent"
-            app:layout_constraintBottom_toTopOf="@+id/Multi Intent"
+            app:layout_constraintBottom_toTopOf="@+id/Multi_Intent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/Multi Intent"
+            android:id="@+id/Multi_Intent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onMultipleIntentClick"
@@ -31,7 +31,7 @@
             app:layout_constraintBottom_toTopOf="@+id/IPC"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Single Intent" />
+            app:layout_constraintTop_toBottomOf="@+id/Single_Intent" />
 
         <Button
             android:id="@+id/IPC"
