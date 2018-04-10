@@ -29,7 +29,7 @@ public class AddRecipe extends AppCompatActivity {
         setContentView(R.layout.activity_add_recipie);
         items = new ArrayList<>();
         itemView = findViewById(R.id.itemView);
-        itemView.setAdapter(new ArrayAdapter<>(this, simple_list_item_1, items));
+        itemView.setAdapter(new ArrayAdapter<>(this, R.layout.custom_list_item, items));
         addRecContext = this;
         bm = new BackendManager();
     }
@@ -56,7 +56,7 @@ public class AddRecipe extends AppCompatActivity {
 
                 items.add(a);
                 itemView.invalidate();
-                itemView.setAdapter(new ArrayAdapter<>(addRecContext, simple_list_item_1, items));
+                itemView.setAdapter(new ArrayAdapter<>(addRecContext, R.layout.custom_list_item, items));
                 dia.dismiss();
             }
         });

@@ -47,9 +47,6 @@ public class List extends AppCompatActivity {
         list = findViewById(R.id.listView);
 
 
-
-
-
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         items = new HashMap<>();
@@ -109,7 +106,7 @@ public class List extends AppCompatActivity {
     private void renderList() {
         ArrayList<String> groceriesList = backendManager.getItemsAsStringArray();
         if(groceriesList!=null) {
-            list.setAdapter(new ArrayAdapter<String>(this, simple_list_item_1, groceriesList));
+            list.setAdapter(new ArrayAdapter<String>(this, R.layout.custom_list_item, groceriesList));
             try {
                 Log.e("LIST", groceriesList.get(0));
             } catch (IndexOutOfBoundsException e) {
