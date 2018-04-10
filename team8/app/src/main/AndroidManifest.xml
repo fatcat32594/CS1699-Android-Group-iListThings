@@ -27,7 +27,7 @@
         </activity>
         <activity android:name=".AddItem">
         </activity>
-        <activity android:name=".AddRecipie">
+        <activity android:name=".AddRecipe">
         </activity>
         <activity android:name=".List">
         </activity>

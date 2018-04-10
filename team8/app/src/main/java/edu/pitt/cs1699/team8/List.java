@@ -18,8 +18,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static android.R.layout.simple_list_item_1;
-
 public class List extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -45,9 +43,6 @@ public class List extends AppCompatActivity {
 
 
         list = findViewById(R.id.listView);
-
-
-
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -109,7 +104,7 @@ public class List extends AppCompatActivity {
     private void renderList() {
         ArrayList<String> groceriesList = backendManager.getItemsAsStringArray();
         if(groceriesList!=null) {
-            list.setAdapter(new ArrayAdapter<String>(this, simple_list_item_1, groceriesList));
+            list.setAdapter(new ArrayAdapter<String>(this, R.layout.custom_list_item, groceriesList));
             try {
                 Log.e("LIST", groceriesList.get(0));
             } catch (IndexOutOfBoundsException e) {
@@ -124,7 +119,7 @@ public class List extends AppCompatActivity {
     }
 
     protected void multiClick(View view){
-        Intent intent = new Intent(this, AddRecipie.class);
+        Intent intent = new Intent(this, AddRecipe.class);
         startActivity(intent);
 
     }
