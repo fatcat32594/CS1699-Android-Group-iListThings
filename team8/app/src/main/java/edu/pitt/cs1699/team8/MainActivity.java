@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
 
+        arriveLocation(55.3, 127.1);
+
     }
 
 
@@ -206,6 +208,23 @@ public class MainActivity extends AppCompatActivity {
             startActivity(startList);
         }
 
+    }
+
+    private void arriveLocation(double lat, double lon) {
+        final Dialog dia = new Dialog(this);
+        dia.setContentView(R.layout.dialog_near_store);
+        dia.show();
+
+        TextView mainText = dia.findViewById(R.id.dialogMain);
+        mainText.setText(String.format("You are near a grocery store!\nThe store is located at\n%.2f\n%.2f", lon, lat));
+        Button closeDiag = dia.findViewById(R.id.dialogButton);
+
+        closeDiag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dia.dismiss();
+            }
+        });
     }
 
 

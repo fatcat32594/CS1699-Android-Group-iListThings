@@ -34,7 +34,7 @@ public class Item {
 
     @Override
     public String toString() {
-        String out = String.format("Item:\t%s\nPrice:\t%.2f\tQuantity:\t%d", this.name, this.price, this.quantity);
+        String out = String.format("Item:\t%s\nPrice:\t%.2f\t\tQuantity:\t%d", this.name, this.price, this.quantity);
         return out;
     }
 }
