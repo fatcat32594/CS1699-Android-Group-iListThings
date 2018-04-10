@@ -31,6 +31,7 @@ public class List extends AppCompatActivity {
 
 
     private FirebaseDatabase database = null;
+    DatabaseReference myRef = null;
     private HashMap<String, Item> items;
 
     @Override
@@ -54,7 +55,7 @@ public class List extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         items = new HashMap<>();
-        final DatabaseReference myRef = database.getReference(mAuth.getUid());
+        myRef = database.getReference(mAuth.getUid());
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -69,7 +70,7 @@ public class List extends AppCompatActivity {
                         items.put(name, i);
                     }
                     catch (NullPointerException e) {
-                        Log.e("SOEMTHING", String.valueOf(child.child("quantity").exists()));
+                        Log.e("SOMETHING", String.valueOf(child.child("quantity").exists()));
                     }
                 }
                 renderList();
@@ -129,6 +130,6 @@ public class List extends AppCompatActivity {
     }
 
     protected void clearClick(View view){
-
+        myRef.setValue(null);
     }
 }

@@ -1,5 +1,8 @@
 package edu.pitt.cs1699.team8;
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -12,7 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BackendManager {
+public class BackendManager extends Service {
     private FirebaseDatabase database = null;
     private HashMap<String, Item> items;
     private FirebaseAuth mAuth;
@@ -91,6 +94,8 @@ public class BackendManager {
 
     }
 
-
+    public IBinder onBind(Intent intent){
+        return null;
+    }
 
 }
