@@ -123,7 +123,7 @@ public class List extends AppCompatActivity {
     }
 
     protected void multiClick(View view){
-        Intent intent = new Intent(this, AddRecipie.class);
+        Intent intent = new Intent(this, AddRecipe.class);
         startActivity(intent);
 
     }

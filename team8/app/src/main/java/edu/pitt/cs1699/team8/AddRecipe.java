@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import static android.R.layout.simple_list_item_1;
 
-public class AddRecipie extends AppCompatActivity {
+public class AddRecipe extends AppCompatActivity {
 
     ArrayList<Item> items;
     ListView itemView;
@@ -72,7 +72,6 @@ public class AddRecipie extends AppCompatActivity {
         }
 
         finish();
-
     }
 
 }
