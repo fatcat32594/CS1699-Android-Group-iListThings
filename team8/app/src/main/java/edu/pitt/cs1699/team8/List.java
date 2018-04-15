@@ -89,6 +89,11 @@ public class List extends AppCompatActivity {
             if (receivedBundle != null && !receivedBundle.isEmpty())
                 startSingle.putExtras(receivedBundle);
             startActivity(startSingle);
+        } else if (action.equals("edu.pitt.cs1699.team8.MULTI")) {
+            Intent startMulti = new Intent(this, AddRecipe.class);
+            if (receivedBundle != null && !receivedBundle.isEmpty())
+                startMulti.putExtras(receivedBundle);
+            startActivity(startMulti);
         }
     }
 

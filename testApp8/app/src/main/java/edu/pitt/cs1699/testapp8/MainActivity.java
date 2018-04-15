@@ -43,34 +43,37 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void onMultipleIntentClick(View v){
-        Intent intent = new Intent("edu.pitt.cs1699.team8.SINGLE");
+        Intent intent = new Intent("edu.pitt.cs1699.team8.MULTI");
         Bundle b = new Bundle();
         JSONArray multipleItemData = new JSONArray();
-        JSONObject type = new JSONObject();
+        JSONObject items = new JSONObject();
         JSONObject item1 = new JSONObject();
         JSONObject item2 = new JSONObject();
         JSONObject item3 = new JSONObject();
 
         try{
-            type.put("type", "Items");
             item1.put("Name", "Banana");
             item1.put("Price", "150");
             item1.put("Quantity", "2");
+
             item2.put("Name","Bacon");
             item2.put("Price","1000");
             item2.put("Quantity","2");
+
             item3.put("Name","Tomato");
             item3.put("Price","250");
             item3.put("Quantity","1");
-            multipleItemData.put(type);
+
             multipleItemData.put(item1);
             multipleItemData.put(item2);
             multipleItemData.put(item3);
+
+            items.put("Items", multipleItemData);
         }catch(JSONException e){
             e.printStackTrace();
         }
-        b.putString("multipleItemData", multipleItemData.toString());
-        intent.putExtra("multipleItemData", b);
+        Log.e("MULTI data: ", items.toString());
+        intent.putExtra("multipleItemData", items.toString());
         startActivity(intent);
     }
     public void onIpcClick(View v){
