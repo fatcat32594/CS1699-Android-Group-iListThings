@@ -80,7 +80,16 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
 
-        arriveLocation(55.3, 127.1);
+        try {
+            if (getIntent().getStringExtra("request").equals("edu.pitt.cs1699.team8.StoreArrival")) {
+                double lat = getIntent().getDoubleExtra("Latitude", 0.0);
+                double lon = getIntent().getDoubleExtra("Longitude", 0.0);
+                arriveLocation(lon, lat);
+            }
+        } catch (NullPointerException e) {
+            Log.e("NullPointerException", e.toString());
+        }
+
 
     }
 

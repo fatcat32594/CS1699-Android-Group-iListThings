@@ -10,6 +10,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("Longitude", 2.123);
         intent.putExtra("Latitude", 1.234);
         sendBroadcast(intent);
+        Log.e("BROADCAST SENT", intent.toString());
     }
 }
 
