@@ -10,7 +10,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -30,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle b = new Bundle();
         JSONObject singleItemData = new JSONObject();
 
+
         try{
 
             singleItemData.put("Name", "Apple");
@@ -43,37 +43,34 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void onMultipleIntentClick(View v){
-        Intent intent = new Intent("edu.pitt.cs1699.team8.MULTI");
+        Intent intent = new Intent("edu.pitt.cs1699.team8.SINGLE");
         Bundle b = new Bundle();
         JSONArray multipleItemData = new JSONArray();
-        JSONObject items = new JSONObject();
+        JSONObject type = new JSONObject();
         JSONObject item1 = new JSONObject();
         JSONObject item2 = new JSONObject();
         JSONObject item3 = new JSONObject();
 
         try{
+            type.put("type", "Items");
             item1.put("Name", "Banana");
             item1.put("Price", "150");
             item1.put("Quantity", "2");
-
             item2.put("Name","Bacon");
             item2.put("Price","1000");
             item2.put("Quantity","2");
-
             item3.put("Name","Tomato");
             item3.put("Price","250");
             item3.put("Quantity","1");
-
+            multipleItemData.put(type);
             multipleItemData.put(item1);
             multipleItemData.put(item2);
             multipleItemData.put(item3);
-
-            items.put("Items", multipleItemData);
         }catch(JSONException e){
             e.printStackTrace();
         }
-        Log.e("MULTI data: ", items.toString());
-        intent.putExtra("multipleItemData", items.toString());
+        b.putString("multipleItemData", multipleItemData.toString());
+        intent.putExtra("multipleItemData", b);
         startActivity(intent);
     }
     public void onIpcClick(View v){
@@ -84,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("Longitude", 2.123);
         intent.putExtra("Latitude", 1.234);
         sendBroadcast(intent);
-        Log.e("BROADCAST SENT", intent.toString());
     }
 }
 
