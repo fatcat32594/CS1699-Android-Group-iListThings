@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import static android.R.layout.simple_list_item_1;
@@ -28,6 +31,25 @@ public class AddRecipe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipie);
         items = new ArrayList<>();
+        Bundle receivedBundle = getIntent().getExtras();
+        if(receivedBundle != null){
+            String multiItemString = receivedBundle.getString("multipleItemData");
+            try{
+                JSONObject multiItemJson = new JSONObject(multiItemString);
+                JSONArray itemsJSON = multiItemJson.getJSONArray("Items");
+                for (int i = 0; i < itemsJSON.length(); i++) {
+                    JSONObject itemJSON = itemsJSON.getJSONObject(i);
+                    String name = itemJSON.getString("Name");
+                    double price = itemJSON.getDouble("Price");
+                    long quan = itemJSON.getLong("Quantity");
+                    Item item = new Item(name, price, quan);
+                    items.add(item);
+                }
+            }catch(Exception e){
+                Log.v("STUFF",e.toString());
+                Log.v("STUFF",multiItemString);
+            }
+        }
         itemView = findViewById(R.id.itemView);
         itemView.setAdapter(new ArrayAdapter<>(this, R.layout.custom_list_item, items));
         addRecContext = this;

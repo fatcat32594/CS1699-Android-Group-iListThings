@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="edu.pitt.cs1699.team8">
+    package="edu.pitt.cs1699.team8">
 
     <application
         android:allowBackup="true"
@@ -11,26 +11,33 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="edu.pitt.cs1699.team8.SINGLE"/>
+                <action android:name="edu.pitt.cs1699.team8.SINGLE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
-                <action android:name="edu.pitt.cs1699.team8.MULTI"/>
+                <action android:name="edu.pitt.cs1699.team8.MULTI" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddItem">
-        </activity>
-        <activity android:name=".AddRecipe">
-        </activity>
-        <activity android:name=".List">
-        </activity>
+        <activity android:name=".AddItem"></activity>
+        <activity android:name=".AddRecipe"></activity>
+        <activity android:name=".List"></activity>
+
+        <receiver
+            android:name="edu.pitt.cs1699.team8.LocationReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="edu.pitt.cs1699.team8.StoreArrival" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
