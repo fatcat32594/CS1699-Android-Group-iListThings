@@ -1,7 +1,12 @@
 package edu.pitt.cs1699.team8;
 
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -12,89 +17,92 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class BackendManager extends Service {
-    private FirebaseDatabase database = null;
-    private HashMap<String, Item> items;
+    private FirebaseDatabase database;
     private FirebaseAuth mAuth;
+    private Uri content_uri = Uri.parse("content://edu.pitt.cs1699.team8.provider/items");
+    private ContentObserver objectObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+
+            String[] projection = {"NAME", "PRICE", "QUANTITY"};
+            String selection = "ID = ?";
+            String[] selctionArgs = {mAuth.getUid()};
+            String sortOrder = "NAME";
+
+            Cursor cursor = getContentResolver().query(content_uri, projection, selection, selctionArgs, sortOrder);
+
+            DatabaseReference myRef = database.getReference(mAuth.getUid());
+            myRef.setValue(null);
+
+            if (cursor != null ) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        String name = cursor.getString(cursor.getColumnIndex("NAME"));
+                        double price = cursor.getDouble(cursor.getColumnIndex("PRICE"));
+                        long quan = cursor.getLong(cursor.getColumnIndex("QUANTITY"));
+
+                        DatabaseReference itemRef = myRef.child(name);
+                        itemRef.child("price").setValue(price);
+                        itemRef.child("quantity").setValue(quan);
+
+                    } while (cursor.moveToNext() && !cursor.isAfterLast());
+                }
+                cursor.close();
+            }
+        }
+    };
 
     public BackendManager() {
-        if (database == null) {
-            mAuth = FirebaseAuth.getInstance();
-            database = FirebaseDatabase.getInstance();
-            items = new HashMap<>();
-            final DatabaseReference myRef = database.getReference(mAuth.getUid());
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    items = new HashMap<>();
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 
-                        try {
-                            String name = child.getKey();
-                            double price = Double.parseDouble(child.child("price").getValue().toString());
-                            long quantity = (long) child.child("quantity").getValue();
+        final DatabaseReference myRef = database.getReference(mAuth.getUid());
 
-                            Item i = new Item(name, price, quantity);
-                            items.put(name, i);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //items = new HashMap<>();
+                getContentResolver().unregisterContentObserver(objectObserver);
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
 
-                        } catch (NullPointerException e) {
-                            Log.e("SOEMTHING", String.valueOf(child.child("quantity").exists()));
-                        }
+                    try {
+                        String name = child.getKey();
+                        double price = Double.parseDouble(child.child("price").getValue().toString());
+                        long quantity = (long) child.child("quantity").getValue();
 
+                        ContentValues values = new ContentValues();
+                        values.put("ID", mAuth.getUid());
+                        values.put("NAME", name);
+                        values.put("PRICE", price);
+                        values.put("QUANTITY", quantity);
 
+                        getContentResolver().insert(content_uri, values);
+
+                    } catch (NullPointerException e) {
+                        Log.e("SOEMTHING", String.valueOf(child.child("quantity").exists()));
                     }
-                    ready=true;
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
 
                 }
-            });
-        }
-    }
+                getContentResolver().registerContentObserver(content_uri, true, objectObserver);
+            }
 
-    public void addItem(String name, final double price, final long quantity) {
-        double oldPrice;
-        long oldQuantity;
-        if (items.containsKey(name)) {
-            oldPrice = items.get(name).getPrice();
-            oldQuantity = items.get(name).getQuantity();
-        } else {
-            oldPrice = 0;
-            oldQuantity = 0;
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        Item i = new Item(name, price, quantity);
-        items.put(name, i);
-
-        double newPrice = price;
-        double newQuantity = oldQuantity + quantity;
-
-        DatabaseReference myRef = database.getReference(mAuth.getUid()+"/"+name);
-        myRef.child("price").setValue(newPrice);
-        myRef.child("quantity").setValue(newQuantity);
-    }
-
-    boolean ready=false;
-
-    public boolean getReady(){
-        return ready;
-    }
-
-    public ArrayList<String> getItemsAsStringArray() {
-        ArrayList<String> strings = new ArrayList<>();
-        for (Item i: items.values()) {
-            strings.add(i.toString());
-        }
-        return strings;
+            }
+        });
 
     }
 
-    public IBinder onBind(Intent intent){
+    @Override
+    public void onCreate() {
+        getContentResolver().registerContentObserver(content_uri, true, objectObserver);
+    }
+
+    public IBinder onBind(Intent intent) {
         return null;
     }
 
