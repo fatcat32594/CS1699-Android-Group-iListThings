@@ -56,6 +56,13 @@ public class List extends AppCompatActivity {
         }
 
         try {
+            if (getIntent().getBooleanExtra("CLEAR_PLS", false))
+                getContentResolver().delete(content_uri, "ID = ?", new String[] {mAuth.getUid()});
+        } catch (Exception e) {
+            Log.d("CLEAR","Clear code not sent or not sent properly");
+        }
+
+        try {
             if (action.equals("edu.pitt.cs1699.team8.SINGLE")) {
                 startSingle = new Intent(this, AddItem.class);
                 if (receivedBundle != null && !receivedBundle.isEmpty())
@@ -70,6 +77,8 @@ public class List extends AppCompatActivity {
         } catch (NullPointerException n) {
             Log.e("NPE: ", n.toString());
         }
+
+
     }
 
 
