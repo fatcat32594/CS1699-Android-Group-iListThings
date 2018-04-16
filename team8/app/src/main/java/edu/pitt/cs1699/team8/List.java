@@ -118,18 +118,18 @@ public class List extends AppCompatActivity {
         }
     }
 
-    protected void singleClick(View view){
+    public void singleClick(View view){
         Intent intent = new Intent(this,AddItem.class);
         startActivity(intent);
     }
 
-    protected void multiClick(View view){
+    public void multiClick(View view){
         Intent intent = new Intent(this, AddRecipe.class);
         startActivity(intent);
 
     }
 
-    protected void clearClick(View view){
+    public void clearClick(View view){
         myRef.setValue(null);
     }
 }
