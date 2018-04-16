@@ -40,7 +40,7 @@
         </receiver>
 
         <provider
-            android:name=".MyContentProvider"
+            android:name=".ListContentProvider"
             android:authorities="edu.pitt.cs1699.team8.provider"
             android:enabled="true"
             android:exported="true"></provider>

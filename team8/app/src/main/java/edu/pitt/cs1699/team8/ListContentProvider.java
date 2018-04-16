@@ -14,7 +14,7 @@ import java.io.File;
 import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
 
 
-public class MyContentProvider extends ContentProvider {
+public class ListContentProvider extends ContentProvider {
     static final String PROVIDER_NAME = "edu.pitt.cs1699.team8.provider";
     static final String URL = "content://" + PROVIDER_NAME + "/items";
     static final Uri CONTENT_URI = Uri.parse(URL);
@@ -35,7 +35,7 @@ public class MyContentProvider extends ContentProvider {
 
     SQLiteDatabase db;
 
-    public MyContentProvider() {
+    public ListContentProvider() {
     }
 
     @Override
