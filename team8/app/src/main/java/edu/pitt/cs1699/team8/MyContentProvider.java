@@ -41,7 +41,8 @@ public class MyContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int count = db.delete(TABLE_NAME, selection, selectionArgs);
-        getContext().getContentResolver().notifyChange(CONTENT_URI , null);
+        if (count > 0)
+            getContext().getContentResolver().notifyChange(CONTENT_URI , null);
         return count;
     }
 
@@ -55,6 +56,8 @@ public class MyContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         long rowID = db.replace(TABLE_NAME, "", values);
+        if (rowID < 0)
+            return null;
         Uri res_uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
         getContext().getContentResolver().notifyChange(CONTENT_URI , null);
         return res_uri;
@@ -87,7 +90,8 @@ public class MyContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         int count = db.update(TABLE_NAME, values, selection, selectionArgs);
-        getContext().getContentResolver().notifyChange(CONTENT_URI , null);
+        if (count > 0)
+            getContext().getContentResolver().notifyChange(CONTENT_URI , null);
         return count;
     }
 }

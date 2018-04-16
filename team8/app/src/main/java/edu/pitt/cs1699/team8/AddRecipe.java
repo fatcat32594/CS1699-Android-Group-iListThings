@@ -1,18 +1,16 @@
 package edu.pitt.cs1699.team8;
 
 import android.app.Dialog;
-import android.app.usage.NetworkStats;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,8 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import static android.R.layout.simple_list_item_1;
 
 public class AddRecipe extends AppCompatActivity {
 

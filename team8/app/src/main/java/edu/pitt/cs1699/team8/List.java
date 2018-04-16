@@ -1,6 +1,5 @@
 package edu.pitt.cs1699.team8;
 
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -14,23 +13,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class List extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-
     ListView list;
-    //BackendManager backendManager;
-
     Uri content_uri = Uri.parse("content://edu.pitt.cs1699.team8.provider/items");
 
     private ContentObserver objectObserver = new ContentObserver(new Handler()) {
@@ -44,6 +33,10 @@ public class List extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent startBackend = new Intent(this, BackendManager.class);
+        startService(startBackend);
+
         setContentView(R.layout.activity_list);
         mAuth=FirebaseAuth.getInstance();
 
