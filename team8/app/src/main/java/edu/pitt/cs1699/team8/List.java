@@ -84,16 +84,20 @@ public class List extends AppCompatActivity {
             action = "";
         }
 
-        if(action.equals("edu.pitt.cs1699.team8.SINGLE")){
-            startSingle=new Intent(this, AddItem.class);
-            if (receivedBundle != null && !receivedBundle.isEmpty())
-                startSingle.putExtras(receivedBundle);
-            startActivity(startSingle);
-        } else if (action.equals("edu.pitt.cs1699.team8.MULTI")) {
-            Intent startMulti = new Intent(this, AddRecipe.class);
-            if (receivedBundle != null && !receivedBundle.isEmpty())
-                startMulti.putExtras(receivedBundle);
-            startActivity(startMulti);
+        try {
+            if (action.equals("edu.pitt.cs1699.team8.SINGLE")) {
+                startSingle = new Intent(this, AddItem.class);
+                if (receivedBundle != null && !receivedBundle.isEmpty())
+                    startSingle.putExtras(receivedBundle);
+                startActivity(startSingle);
+            } else if (action.equals("edu.pitt.cs1699.team8.MULTI")) {
+                Intent startMulti = new Intent(this, AddRecipe.class);
+                if (receivedBundle != null && !receivedBundle.isEmpty())
+                    startMulti.putExtras(receivedBundle);
+                startActivity(startMulti);
+            }
+        } catch (NullPointerException n) {
+            Log.e("NPE: ", n.toString());
         }
     }
 
@@ -118,18 +122,18 @@ public class List extends AppCompatActivity {
         }
     }
 
-    protected void singleClick(View view){
+    public void singleClick(View view){
         Intent intent = new Intent(this,AddItem.class);
         startActivity(intent);
     }
 
-    protected void multiClick(View view){
+    public void multiClick(View view){
         Intent intent = new Intent(this, AddRecipe.class);
         startActivity(intent);
 
     }
 
-    protected void clearClick(View view){
+    public void clearClick(View view){
         myRef.setValue(null);
     }
 }
