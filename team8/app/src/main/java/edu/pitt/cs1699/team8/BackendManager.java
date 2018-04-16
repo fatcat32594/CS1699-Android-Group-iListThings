@@ -102,38 +102,6 @@ public class BackendManager extends Service {
         getContentResolver().registerContentObserver(content_uri, true, objectObserver);
     }
 
-    @Deprecated
-    /*public void addItem(String name, final double price, final long quantity) {
-        double oldPrice;
-        long oldQuantity;
-        if (items.containsKey(name)) {
-            oldPrice = items.get(name).getPrice();
-            oldQuantity = items.get(name).getQuantity();
-        } else {
-            oldPrice = 0;
-            oldQuantity = 0;
-        }
-
-        Item i = new Item(name, price, quantity);
-        items.put(name, i);
-
-        double newPrice = price;
-        double newQuantity = oldQuantity + quantity;
-
-        DatabaseReference myRef = database.getReference(mAuth.getUid() + "/" + name);
-        myRef.child("price").setValue(newPrice);
-        myRef.child("quantity").setValue(newQuantity);
-    }*/
-
-    /*public ArrayList<String> getItemsAsStringArray() {
-        ArrayList<String> strings = new ArrayList<>();
-        for (Item i : items.values()) {
-            strings.add(i.toString());
-        }
-        return strings;
-
-    }*/
-
     public IBinder onBind(Intent intent) {
         return null;
     }
