@@ -1,53 +1,34 @@
 package edu.pitt.cs1699.team8;
 
+import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-
-import java.lang.ref.WeakReference;
+import android.os.Messenger;
 
 
-public class ClearService extends AppCompatActivity {
+public class ClearService extends Service {
+    public static final int MSG_CLEAR_CODE = 56;
 
-    private static int CLEAR_CODE = 56;
-
-    Handler mMessageHandler = null;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mMessageHandler = new MessageHandler(this);
-
+    class IncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_CLEAR_CODE:
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    intent.putExtra("CLEAR_PLS", true);
+                    startActivity(intent);
+                default:
+                    super.handleMessage(msg);
+            }
+        }
     }
 
-    private static class MessageHandler extends Handler {
-        private WeakReference<ClearService> mActivity;
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
 
-        public MessageHandler(ClearService activity){
-            mActivity = new WeakReference<ClearService>(activity);
-        }
-
-        public void handleMessage(Message message){
-            ClearService activity = mActivity.get();
-
-            if(activity == null) {
-                return;
-            }
-
-            int i = MessageService.getClear(message);
-
-            if(i == CLEAR_CODE){
-                Intent intent = new Intent(activity, List.class);
-
-                intent.putExtra("CLEAR_CODE", 56);
-
-
-            }
-
-        }
-
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mMessenger.getBinder();
     }
 }
