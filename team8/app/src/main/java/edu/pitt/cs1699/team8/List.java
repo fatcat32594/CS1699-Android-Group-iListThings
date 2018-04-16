@@ -1,7 +1,12 @@
 package edu.pitt.cs1699.team8;
 
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,12 +29,17 @@ public class List extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     ListView list;
-    BackendManager backendManager;
+    //BackendManager backendManager;
 
+    Uri content_uri = Uri.parse("content://edu.pitt.cs1699.team8.provider/items");
 
-    private FirebaseDatabase database = null;
-    DatabaseReference myRef = null;
-    private HashMap<String, Item> items;
+    private ContentObserver objectObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            renderList();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,42 +49,9 @@ public class List extends AppCompatActivity {
 
         String user = mAuth.getCurrentUser().getUid();
 
-
-        backendManager = new BackendManager();
-
-
         list = findViewById(R.id.listView);
 
-
-        mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        items = new HashMap<>();
-        myRef = database.getReference(mAuth.getUid());
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                items = new HashMap<>();
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    try {
-                        String name = child.getKey();
-                        double price = Double.parseDouble(child.child("price").getValue().toString());
-                        long quantity = (long) child.child("quantity").getValue();
-
-                        Item i = new Item(name, price, quantity);
-                        items.put(name, i);
-                    }
-                    catch (NullPointerException e) {
-                        Log.e("SOMETHING", String.valueOf(child.child("quantity").exists()));
-                    }
-                }
-                renderList();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        renderList();
 
         Intent receivedIntent = getIntent();
         Bundle receivedBundle = receivedIntent.getExtras();
@@ -109,9 +87,41 @@ public class List extends AppCompatActivity {
 
     }
 
+    protected void onResume() {
+        super.onResume();
+        renderList();
+        getContentResolver().registerContentObserver(content_uri, true, objectObserver);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        getContentResolver().unregisterContentObserver(objectObserver);
+    }
+
 
     private void renderList() {
-        ArrayList<String> groceriesList = backendManager.getItemsAsStringArray();
+        String[] projection = {"NAME", "PRICE", "QUANTITY"};
+        String selection = "ID = ?";
+        String[] selctionArgs = {mAuth.getUid()};
+        String sortOrder = "NAME";
+
+        Cursor cursor = getContentResolver().query(content_uri, projection, selection, selctionArgs, sortOrder);
+
+        ArrayList<String> groceriesList = new ArrayList<>();
+
+        if (cursor != null ) {
+            if (cursor.moveToFirst()) {
+                do {
+                    String name = cursor.getString(cursor.getColumnIndex("NAME"));
+                    double price = cursor.getDouble(cursor.getColumnIndex("PRICE"));
+                    long quan = cursor.getLong(cursor.getColumnIndex("QUANTITY"));
+                    Item i = new Item(name, price, quan);
+                    groceriesList.add(i.toString());
+                } while (cursor.moveToNext() && !cursor.isAfterLast());
+            }
+            cursor.close();
+        }
+
         if(groceriesList!=null) {
             list.setAdapter(new ArrayAdapter<String>(this, R.layout.custom_list_item, groceriesList));
             try {
@@ -134,6 +144,6 @@ public class List extends AppCompatActivity {
     }
 
     public void clearClick(View view){
-        myRef.setValue(null);
+        getContentResolver().delete(content_uri, "ID = ?", new String[] {mAuth.getUid()});
     }
 }

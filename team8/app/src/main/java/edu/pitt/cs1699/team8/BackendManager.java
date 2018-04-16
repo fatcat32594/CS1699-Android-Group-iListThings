@@ -57,6 +57,11 @@ public class BackendManager extends Service {
         }
     }
 
+    @Override
+    public void onCreate() {
+
+    }
+
     public void addItem(String name, final double price, final long quantity) {
         double oldPrice;
         long oldQuantity;

@@ -1,7 +1,10 @@
 package edu.pitt.cs1699.team8;
 
 import android.app.Dialog;
+import android.app.usage.NetworkStats;
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +29,8 @@ public class AddRecipe extends AppCompatActivity {
     ArrayList<Item> items;
     ListView itemView;
     Context addRecContext;
-    BackendManager bm;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    Uri content_uri = Uri.parse("content://edu.pitt.cs1699.team8.provider/items");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +59,6 @@ public class AddRecipe extends AppCompatActivity {
         itemView = findViewById(R.id.itemView);
         itemView.setAdapter(new ArrayAdapter<>(this, R.layout.custom_list_item, items));
         addRecContext = this;
-        bm = new BackendManager();
     }
 
     public void addItemClick(View v) {
@@ -90,7 +95,16 @@ public class AddRecipe extends AppCompatActivity {
             String name = i.getName();
             double price = i.getPrice();
             long quan = i.getQuantity();
-            bm.addItem(name, price, quan);
+
+
+            ContentValues values = new ContentValues();
+
+            values.put("ID", mAuth.getUid());
+            values.put("NAME", name);
+            values.put("PRICE", price);
+            values.put("QUANTITY", quan);
+
+            getContentResolver().insert(content_uri, values);
         }
 
         finish();
