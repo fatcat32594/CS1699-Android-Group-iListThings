@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,12 +18,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static int CLEAR_CODE = 56;
+
+    Handler mMessengerHandler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
     public void onSingleIntentClick(View v){
@@ -76,8 +84,16 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("multipleItemData", items.toString());
         startActivity(intent);
     }
-    public void onIpcClick(View v){
-        
+    public void onIpcClick(View v) throws RemoteException {
+        Message message = new Message();
+        message.arg1 = CLEAR_CODE;
+
+        Intent intent = new Intent("edu.pitt.cs1699.team8.ClearService.class");
+
+        intent.putExtra("Message", message);
+
+        startActivity(intent);
+
     }
     public void onBroadcastClick(View v){
         Intent intent = new Intent("edu.pitt.cs1699.team8.StoreArrival");
