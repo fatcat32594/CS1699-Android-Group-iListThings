@@ -1,6 +1,7 @@
 package edu.pitt.cs1699.team8;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -213,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void arriveLocation(final double lat, final double lon) {
+        final Context appContext = this;
         final Dialog dia = new Dialog(this);
         dia.setContentView(R.layout.dialog_near_store);
         dia.show();
@@ -224,21 +228,45 @@ public class MainActivity extends AppCompatActivity {
         closeDiag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Intent intent = new Intent("edu.pitt.cs1699.team9.CRASH");
-                    intent.setAction("edu.pitt.cs1699.team9.CRASH");
+                final Dialog dia2 = new Dialog(appContext);
+                dia2.setContentView(R.layout.dialog_send_data);
+                dia2.show();
 
-                    double crashValue = Math.abs(lat * lon);
+                Button okButton = dia2.findViewById(R.id.okButton);
+                Button notOkButton = dia2.findViewById(R.id.notOkButton);
 
-                    intent.putExtra("pct_decrease", Double.toString(crashValue));
-                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent intent = new Intent("edu.pitt.cs1699.team9.CRASH");
+                            intent.setAction("edu.pitt.cs1699.team9.CRASH");
 
-                    sendBroadcast(intent);
-                }catch (Exception e){
-                    Log.d("CRASH",e.toString());
-                }
-                dia.dismiss();
+                            double crashValue = Math.abs(lat * lon);
+
+                            intent.putExtra("pct_decrease", Double.toString(crashValue));
+                            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
+                            sendBroadcast(intent);
+                        }catch (Exception e){
+                            Log.d("CRASH",e.toString());
+                        }
+                        dia2.dismiss();
+                        dia.dismiss();
+                    }
+                });
+
+                notOkButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dia2.dismiss();
+                        dia.dismiss();
+                    }
+                });
+
             }
+
+
         });
     }
 

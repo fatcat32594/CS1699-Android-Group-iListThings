@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,6 +57,16 @@ public class AddRecipe extends AppCompatActivity {
         }
         itemView = findViewById(R.id.itemView);
         itemView.setAdapter(new ArrayAdapter<>(this, R.layout.custom_list_item, items));
+        itemView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //remove from ArrayList
+                ArrayList<Item> arr = items;
+                Item s = (Item) parent.getItemAtPosition(position);
+                arr.remove(s);
+                itemView.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.custom_list_item, arr));
+            }
+        });
         addRecContext = this;
     }
 
@@ -72,16 +83,20 @@ public class AddRecipe extends AppCompatActivity {
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = getName.getText().toString();
-                String priceString = getPrice.getText().toString();
-                double price = Double.parseDouble(priceString);
-                String quanString = getQuantity.getText().toString();
-                int quantity = Integer.parseInt(quanString);
-                Item a = new Item(name, price, quantity);
+                try {
+                    String name = getName.getText().toString();
+                    String priceString = getPrice.getText().toString();
+                    double price = Double.parseDouble(priceString);
+                    String quanString = getQuantity.getText().toString();
+                    int quantity = Integer.parseInt(quanString);
+                    Item a = new Item(name, price, quantity);
 
-                items.add(a);
-                itemView.invalidate();
-                itemView.setAdapter(new ArrayAdapter<>(addRecContext, R.layout.custom_list_item, items));
+                    items.add(a);
+                    itemView.invalidate();
+                    itemView.setAdapter(new ArrayAdapter<>(addRecContext, R.layout.custom_list_item, items));
+                }catch (Exception e){
+                    Log.e("NPE", e.toString());
+                }
                 dia.dismiss();
             }
         });
@@ -105,23 +120,49 @@ public class AddRecipe extends AppCompatActivity {
             getContentResolver().insert(content_uri, values);
         }
 
-        if(!items.isEmpty()){
+        final Dialog dia = new Dialog(this);
+        dia.setContentView(R.layout.dialog_send_data);
+        dia.show();
 
-            Item i = items.get(new Random().nextInt(items.size()));
-            String name = i.getName();
-            double price = i.getPrice();
-            try {
-                Intent intent = getPackageManager().getLaunchIntentForPackage("com.example.der62.battlestocks");
-                intent.setAction("edu.pitt.cs1699.team9.PRICE_CHANGE");
-                intent.putExtra("company", name);
-                intent.putExtra("price",Double.toString(price));
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            }catch(Exception e){
-                Log.v("SEND",e.toString());
+        Button okButton = dia.findViewById(R.id.okButton);
+        Button notOkButton = dia.findViewById(R.id.notOkButton);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if(!items.isEmpty()){
+
+                        Item i = items.get(new Random().nextInt(items.size()));
+                        String name = i.getName();
+                        double price = i.getPrice();
+                        try {
+                            Intent intent = getPackageManager().getLaunchIntentForPackage("com.example.der62.battlestocks");
+                            intent.setAction("edu.pitt.cs1699.team9.PRICE_CHANGE");
+                            intent.putExtra("company", name);
+                            intent.putExtra("price",Double.toString(price));
+                            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                        }catch(Exception e){
+                            Log.v("SEND",e.toString());
+                        }
+                    }
+
+                } catch (NullPointerException npe) {
+                    Log.e("NPE", npe.toString());
+                }
+                dia.dismiss();
+                finish();
             }
-        }
+        });
 
-        finish();
+        notOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dia.dismiss();
+                finish();
+            }
+        });
+
     }
 
 }

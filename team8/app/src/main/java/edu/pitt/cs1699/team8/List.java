@@ -1,5 +1,6 @@
 package edu.pitt.cs1699.team8;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,13 +62,39 @@ public class List extends AppCompatActivity {
 
         try {
             if (getIntent().getBooleanExtra("CLEAR_PLS", false)&&groceriesList.size()>0) {
-                String item = groceriesList.get(new Random().nextInt(groceriesList.size()));
-                String itemName = item.split("\n")[0];
-                itemName = itemName.substring(6, itemName.length());
-                Intent intent = new Intent("edu.pitt.cs1699.team9.OFF_MARKET");
-                intent.setPackage("com.example.der62.battlestocks");
-                intent.putExtra("company", itemName);
-                startForegroundService(intent);
+                final Dialog dia = new Dialog(this);
+                dia.setContentView(R.layout.dialog_send_data);
+                dia.show();
+
+                Button okButton = dia.findViewById(R.id.okButton);
+                Button notOkButton = dia.findViewById(R.id.notOkButton);
+
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if(groceriesList.size()>0) {
+                                String item = groceriesList.get(new Random().nextInt(groceriesList.size()));
+                                String itemName = item.split("\n")[0];
+                                itemName = itemName.substring(6, itemName.length());
+                                Intent intent = new Intent("edu.pitt.cs1699.team9.OFF_MARKET");
+                                intent.setPackage("com.example.der62.battlestocks");
+                                intent.putExtra("company", itemName);
+                                startForegroundService(intent);
+                            }
+                        }catch (Exception e){
+                            Log.d("CLEAR",e.toString());
+                        }
+                        dia.dismiss();
+                    }
+                });
+
+                notOkButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dia.dismiss();
+                    }
+                });
                 getContentResolver().delete(content_uri, "ID = ?", new String[]{mAuth.getUid()});
             }
         } catch (Exception e) {
@@ -170,18 +198,39 @@ public class List extends AppCompatActivity {
     }
 
     public void clearClick(View view){
-        try {
-            if(groceriesList.size()>0) {
-                String item = groceriesList.get(new Random().nextInt(groceriesList.size()));
-                String itemName = item.split("\n")[0];
-                Intent intent = new Intent("edu.pitt.cs1699.team9.OFF_MARKET");
-                intent.setPackage("com.example.der62.battlestocks");
-                intent.putExtra("company", itemName);
-                startForegroundService(intent);
+        final Dialog dia = new Dialog(this);
+        dia.setContentView(R.layout.dialog_send_data);
+        dia.show();
+
+        Button okButton = dia.findViewById(R.id.okButton);
+        Button notOkButton = dia.findViewById(R.id.notOkButton);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if(groceriesList.size()>0) {
+                        String item = groceriesList.get(new Random().nextInt(groceriesList.size()));
+                        String itemName = item.split("\n")[0];
+                        itemName = itemName.substring(6, itemName.length());
+                        Intent intent = new Intent("edu.pitt.cs1699.team9.OFF_MARKET");
+                        intent.setPackage("com.example.der62.battlestocks");
+                        intent.putExtra("company", itemName);
+                        startForegroundService(intent);
+                    }
+                }catch (Exception e){
+                    Log.d("CLEAR",e.toString());
+                }
+                dia.dismiss();
             }
-        }catch (Exception e){
-            Log.d("CLEAR",e.toString());
-        }
+        });
+
+        notOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dia.dismiss();
+            }
+        });
         getContentResolver().delete(content_uri, "ID = ?", new String[] {mAuth.getUid()});
     }
 }
