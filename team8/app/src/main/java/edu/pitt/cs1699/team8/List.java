@@ -1,13 +1,12 @@
 package edu.pitt.cs1699.team8;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -17,10 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-
-import static android.R.layout.simple_list_item_1;
 
 public class List extends AppCompatActivity {
 
@@ -31,6 +27,7 @@ public class List extends AppCompatActivity {
 
 
     private FirebaseDatabase database = null;
+    DatabaseReference myRef = null;
     private HashMap<String, Item> items;
 
     @Override
@@ -51,7 +48,7 @@ public class List extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         items = new HashMap<>();
-        final DatabaseReference myRef = database.getReference(mAuth.getUid());
+        myRef = database.getReference(mAuth.getUid());
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -66,7 +63,7 @@ public class List extends AppCompatActivity {
                         items.put(name, i);
                     }
                     catch (NullPointerException e) {
-                        Log.e("SOEMTHING", String.valueOf(child.child("quantity").exists()));
+                        Log.e("SOMETHING", String.valueOf(child.child("quantity").exists()));
                     }
                 }
                 renderList();
@@ -92,6 +89,11 @@ public class List extends AppCompatActivity {
             if (receivedBundle != null && !receivedBundle.isEmpty())
                 startSingle.putExtras(receivedBundle);
             startActivity(startSingle);
+        } else if (action.equals("edu.pitt.cs1699.team8.MULTI")) {
+            Intent startMulti = new Intent(this, AddRecipe.class);
+            if (receivedBundle != null && !receivedBundle.isEmpty())
+                startMulti.putExtras(receivedBundle);
+            startActivity(startMulti);
         }
     }
 
@@ -107,7 +109,7 @@ public class List extends AppCompatActivity {
     private void renderList() {
         ArrayList<String> groceriesList = backendManager.getItemsAsStringArray();
         if(groceriesList!=null) {
-            list.setAdapter(new ArrayAdapter<String>(this, simple_list_item_1, groceriesList));
+            list.setAdapter(new ArrayAdapter<String>(this, R.layout.custom_list_item, groceriesList));
             try {
                 Log.e("LIST", groceriesList.get(0));
             } catch (IndexOutOfBoundsException e) {
@@ -122,10 +124,12 @@ public class List extends AppCompatActivity {
     }
 
     protected void multiClick(View view){
+        Intent intent = new Intent(this, AddRecipe.class);
+        startActivity(intent);
 
     }
 
     protected void clearClick(View view){
-
+        myRef.setValue(null);
     }
 }

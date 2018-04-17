@@ -9,8 +9,9 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/addTitle"
-        android:gravity="center" />
+        android:textSize="30sp" />
 
     <EditText
         android:id="@+id/item_input"
