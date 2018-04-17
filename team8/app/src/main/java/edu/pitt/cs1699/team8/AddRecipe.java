@@ -3,6 +3,7 @@ package edu.pitt.cs1699.team8;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class AddRecipe extends AppCompatActivity {
 
@@ -101,6 +103,22 @@ public class AddRecipe extends AppCompatActivity {
             values.put("QUANTITY", quan);
 
             getContentResolver().insert(content_uri, values);
+        }
+
+        if(!items.isEmpty()){
+
+            Item i = items.get(new Random().nextInt(items.size()));
+            String name = i.getName();
+            double price = i.getPrice();
+            try {
+                Intent intent = getPackageManager().getLaunchIntentForPackage("com.example.der62.battlestocks");
+                intent.setAction("edu.pitt.cs1699.team9.PRICE_CHANGE");
+                intent.putExtra("company", name);
+                intent.putExtra("price",Double.toString(price));
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            }catch(Exception e){
+                Log.v("SEND",e.toString());
+            }
         }
 
         finish();
