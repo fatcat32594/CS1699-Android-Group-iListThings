@@ -26,18 +26,29 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddItem"></activity>
-        <activity android:name=".AddRecipe"></activity>
-        <activity android:name=".List"></activity>
+        <activity android:name=".AddItem" />
+        <activity android:name=".AddRecipe" />
+        <activity android:name=".List" />
 
         <receiver
-            android:name="edu.pitt.cs1699.team8.LocationReceiver"
+            android:name=".LocationReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="edu.pitt.cs1699.team8.StoreArrival" />
             </intent-filter>
         </receiver>
+        <provider
+            android:name=".ListContentProvider"
+            android:authorities="edu.pitt.cs1699.team8.provider"
+            android:enabled="true"
+            android:exported="true"></provider>
+        <service android:name=".BackendManager"/>
+        <service android:name=".ClearService">
+            <intent-filter>
+                <action android:name="edu.pitt.cs1699.team8.ClearService"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
