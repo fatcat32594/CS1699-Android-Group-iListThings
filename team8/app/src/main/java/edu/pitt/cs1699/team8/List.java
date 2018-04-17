@@ -62,6 +62,7 @@ public class List extends AppCompatActivity {
             if (getIntent().getBooleanExtra("CLEAR_PLS", false)&&groceriesList.size()>0) {
                 String item = groceriesList.get(new Random().nextInt(groceriesList.size()));
                 String itemName = item.split("\n")[0];
+                itemName = itemName.substring(6, itemName.length());
                 Intent intent = new Intent("edu.pitt.cs1699.team9.OFF_MARKET");
                 intent.setPackage("com.example.der62.battlestocks");
                 intent.putExtra("company", itemName);
@@ -144,11 +145,14 @@ public class List extends AppCompatActivity {
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //Position = positon of clicked item
-                    //ArrayList<String> temp = list;
                     //remove from ArrayList
-                    //setAdapter
-
+                    ArrayList<String> arr = groceriesList;
+                    String s = (String) parent.getItemAtPosition(position);
+                    arr.remove(s);
+                    String[] args = s.split("\n");
+                    String result = args[0].substring(6, args[0].length());
+                    getContentResolver().delete(content_uri, "NAME = ? AND ID = ?", new String[]{result, mAuth.getUid()});
+                    list.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.custom_list_item, arr));
                 }
             });
         }
