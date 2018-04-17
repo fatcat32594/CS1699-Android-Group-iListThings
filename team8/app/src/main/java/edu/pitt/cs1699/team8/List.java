@@ -16,12 +16,14 @@ import android.widget.ListView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class List extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     ListView list;
     Uri content_uri = Uri.parse("content://edu.pitt.cs1699.team8.provider/items");
+    ArrayList<String> groceriesList;
 
     private ContentObserver objectObserver = new ContentObserver(new Handler()) {
         @Override
@@ -57,10 +59,17 @@ public class List extends AppCompatActivity {
         }
 
         try {
-            if (getIntent().getBooleanExtra("CLEAR_PLS", false))
-                getContentResolver().delete(content_uri, "ID = ?", new String[] {mAuth.getUid()});
+            if (getIntent().getBooleanExtra("CLEAR_PLS", false)&&groceriesList.size()>0) {
+                String item = groceriesList.get(new Random().nextInt(groceriesList.size()));
+                String itemName = item.split("\n")[0];
+                Intent intent = new Intent("edu.pitt.cs1699.team9.OFF_MARKET");
+                intent.setPackage("com.example.der62.battlestocks");
+                intent.putExtra("company", itemName);
+                startForegroundService(intent);
+                getContentResolver().delete(content_uri, "ID = ?", new String[]{mAuth.getUid()});
+            }
         } catch (Exception e) {
-            Log.d("CLEAR","Clear code not sent or not sent properly");
+            Log.d("CLEAR",e.toString());
         }
 
         try {
@@ -110,7 +119,7 @@ public class List extends AppCompatActivity {
 
         Cursor cursor = getContentResolver().query(content_uri, projection, selection, selctionArgs, sortOrder);
 
-        ArrayList<String> groceriesList = new ArrayList<>();
+        groceriesList = new ArrayList<>();
 
         if (cursor != null ) {
             if (cursor.moveToFirst()) {
@@ -157,6 +166,18 @@ public class List extends AppCompatActivity {
     }
 
     public void clearClick(View view){
+        try {
+            if(groceriesList.size()>0) {
+                String item = groceriesList.get(new Random().nextInt(groceriesList.size()));
+                String itemName = item.split("\n")[0];
+                Intent intent = new Intent("edu.pitt.cs1699.team9.OFF_MARKET");
+                intent.setPackage("com.example.der62.battlestocks");
+                intent.putExtra("company", itemName);
+                startForegroundService(intent);
+            }
+        }catch (Exception e){
+            Log.d("CLEAR",e.toString());
+        }
         getContentResolver().delete(content_uri, "ID = ?", new String[] {mAuth.getUid()});
     }
 }
