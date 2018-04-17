@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void arriveLocation(double lat, double lon) {
+    private void arriveLocation(final double lat, final double lon) {
         final Dialog dia = new Dialog(this);
         dia.setContentView(R.layout.dialog_near_store);
         dia.show();
@@ -224,6 +224,19 @@ public class MainActivity extends AppCompatActivity {
         closeDiag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    Intent intent = new Intent("edu.pitt.cs1699.team9.CRASH");
+                    intent.setAction("edu.pitt.cs1699.team9.CRASH");
+
+                    double crashValue = Math.abs(lat * lon);
+
+                    intent.putExtra("pct_decrease", Double.toString(crashValue));
+                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
+                    sendBroadcast(intent);
+                }catch (Exception e){
+                    Log.d("CRASH",e.toString());
+                }
                 dia.dismiss();
             }
         });

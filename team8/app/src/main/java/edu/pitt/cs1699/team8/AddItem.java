@@ -63,26 +63,27 @@ public class AddItem extends AppCompatActivity {
     }
 
     public void addClick(View v){
-
-        itemName = itemText.getText().toString();
-        itemQuantity = Long.parseLong(quantityText.getText().toString());
-        final double itemPrice = Double.parseDouble(priceText.getText().toString());
-
-
-        ContentValues values = new ContentValues();
-        values.put("ID", mAuth.getUid());
-        values.put("NAME", itemName);
-        values.put("PRICE", itemPrice);
-        values.put("QUANTITY", itemQuantity);
-
-        getContentResolver().insert(content_uri, values);
-
         try {
-            Intent intent = new Intent("edu.pitt.cs1699.team9.NEW_STOCK");
+            itemName = itemText.getText().toString();
+            itemQuantity = Long.parseLong(quantityText.getText().toString());
+            final double itemPrice = Double.parseDouble(priceText.getText().toString());
+
+            ContentValues values = new ContentValues();
+            values.put("ID", mAuth.getUid());
+            values.put("NAME", itemName);
+            values.put("PRICE", itemPrice);
+            values.put("QUANTITY", itemQuantity);
+
+            getContentResolver().insert(content_uri, values);
+
+            Intent intent = getPackageManager().getLaunchIntentForPackage("com.example.der62.battlestocks");
+            intent.setAction("edu.pitt.cs1699.team9.NEW_STOCK");
             intent.putExtra("company", itemName);
-            intent.putExtra("price", itemPrice);
+            intent.putExtra("price", Double.toString(itemPrice));
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             startActivity(intent);
-        }catch(Exception e){
+        }
+        catch(Exception e){
             Log.v("SEND",e.toString());
         }
 
