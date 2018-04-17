@@ -1,5 +1,6 @@
 package edu.pitt.cs1699.team8;
 
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -76,17 +78,48 @@ public class AddItem extends AppCompatActivity {
 
             getContentResolver().insert(content_uri, values);
 
-            Intent intent = getPackageManager().getLaunchIntentForPackage("com.example.der62.battlestocks");
-            intent.setAction("edu.pitt.cs1699.team9.NEW_STOCK");
-            intent.putExtra("company", itemName);
-            intent.putExtra("price", Double.toString(itemPrice));
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            startActivity(intent);
+            final Dialog dia = new Dialog(this);
+            dia.setContentView(R.layout.dialog_send_data);
+            dia.show();
+
+            Button okButton = dia.findViewById(R.id.okButton);
+            Button notOkButton = dia.findViewById(R.id.notOkButton);
+
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        Intent intent = getPackageManager().getLaunchIntentForPackage("com.example.der62.battlestocks");
+                        intent.setAction("edu.pitt.cs1699.team9.NEW_STOCK");
+                        intent.putExtra("company", itemName);
+                        intent.putExtra("price", Double.toString(itemPrice));
+                        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                        startActivity(intent);
+
+                    } catch (NullPointerException npe) {
+                        Log.e("NPE", npe.toString());
+                    }
+                    dia.dismiss();
+                    finish();
+                }
+            });
+
+            notOkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dia.dismiss();
+                    finish();
+                }
+            });
+
+
+
+
         }
         catch(Exception e){
             Log.v("SEND",e.toString());
         }
 
-        finish();
+
     }
 }
